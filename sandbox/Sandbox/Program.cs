@@ -1,27 +1,63 @@
-using System;
-
 class Program
 {
     static void Main(string[] args)
     {
-        Job job1 = new Job();
-        job1._jobTitle = "Field Technology Specialist";
-        job1._company = "FedEx Office";
-        job1._startYear = 2021;
-        job1._endYear = 2023;
+        var scripture = new Scripture(new Reference("John", "3:16"), "For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life.");
 
-        Job job2 = new Job();
-        job2._jobTitle = "Assistant Manager";
-        job2._company = "FedEx Office";
-        job2._startYear = 2020;
-        job2._endYear = 2021;
+        while (true)
+        {
+            Console.Clear();
+            Console.WriteLine(scripture.ToString());
+            Console.Write("Press Enter to continue or type 'quit' to exit: ");
+            var input = Console.ReadLine();
 
-        Resume myResume = new Resume();
-        myResume._name = "Alejandro Alvarez";
+            if (input.ToLower() == "quit")
+                break;
 
-        myResume._jobs.Add(job1);
-        myResume._jobs.Add(job2);
+            scripture.HideRandomWords(5);
+        }
+    }
 
-        myResume.Display();
+   
+    static void LoadScripturesFromFile()
+    {
+        var scriptures = new List<Scripture>();
+        var filePath = "scriptures.txt";
+
+        if (File.Exists(filePath))
+        {
+            var lines = File.ReadAllLines(filePath);
+            foreach (var line in lines)
+            {
+                var parts = line.Split('|');
+                var reference = parts[0];
+                var text = parts[1];
+
+                var book = reference.Split(' ')[0];
+                var verse = reference.Split(' ')[1];
+
+                var scriptureReference = new Reference(book, verse);
+                var scripture = new Scripture(scriptureReference, text);
+
+                scriptures.Add(scripture);
+            }
+        }
+
+    
+        var random = new Random();
+        var selectedScripture = scriptures[random.Next(scriptures.Count)];
+
+        while (true)
+        {
+            Console.Clear();
+            Console.WriteLine(selectedScripture.ToString());
+            Console.Write("Press Enter to continue or type 'quit' to exit: ");
+            var input = Console.ReadLine();
+
+            if (input.ToLower() == "quit")
+                break;
+
+            selectedScripture.HideRandomWords(5);
+        }
     }
 }
